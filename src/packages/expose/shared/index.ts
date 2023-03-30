@@ -1,0 +1,92 @@
+export * from './SchemaField'
+
+import {
+  Form,
+  FormTab,
+  FormLayout,
+  FormGrid,
+  FormCollapse,
+  Field,
+  Space,
+  Input,
+  InputNumber,
+  Select,
+  Text,
+  Card,
+  Switch,
+  Radio,
+  Checkbox,
+  Cascader,
+  // Transfer,
+  // Password,
+  DatePicker,
+  TimePicker,
+  // Upload,
+  ArrayCards,
+  ArrayTable,
+  ObjectContainer,
+  TreeSelect,
+  // Rate,
+  Button,
+  IframeBox,
+} from '@designer-renderer'
+
+// 设计器渲染组件资源
+export const designerFormSources = {
+  Inputs: [
+    Input,
+    InputNumber,
+    // Rate,
+    Select,
+    TreeSelect,
+    Cascader,
+    // Transfer,
+    Checkbox,
+    Radio,
+    DatePicker,
+    TimePicker,
+    // Upload,
+    Switch,
+    // ObjectContainer,
+    Button,
+  ],
+  Arrays: [ArrayCards, ArrayTable],
+  Displays: [Text, IframeBox],
+  Layouts: [Card, Space, FormGrid, FormLayout, FormTab, FormCollapse],
+}
+
+// 设计器渲染组件
+export const designerFormComponents = {
+  Form,
+  FormTab,
+  FormLayout,
+  FormGrid,
+  FormCollapse,
+  Space,
+  Field,
+  Input,
+  InputNumber,
+  Cascader,
+  Text,
+  Card,
+  Switch,
+  TreeSelect,
+  Select,
+  Checkbox,
+  Radio,
+
+  // Transfer,
+  DatePicker,
+  TimePicker,
+
+  ArrayCards,
+  ArrayTable,
+
+  ObjectContainer,
+  IframeBox,
+  Button,
+
+  // Upload,
+  // Password,
+  // Rate,
+}

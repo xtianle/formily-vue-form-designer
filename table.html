@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title></title>
+    <script src="vue.js"></script>
+    <style type="text/css">
+      table {
+        text-align: center;
+        border-collapse: collapse;
+      }
+      .bg {
+        /* 鼠标移入的样式bg           */
+        background-color: #e5dde1 !important;
+      }
+      .gbg {
+        /* 背景颜色*/
+        background-color: #ddebf7;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <div>
+        <p>姓名: <input type="text" v-model="item.name" /></p>
+        <p>年龄: <input type="text" v-model="item.age" /></p>
+        <p>
+          性别:
+          <select v-model="item.sex">
+            <option value="0">女</option>
+            <option value="1">男</option>
+          </select>
+          <button @click="clearItem()">清空</button>
+          <button @click="addItem()">添加</button>
+        </p>
+      </div>
+      <table cellspacing="" cellpadding="" width="250px">
+        <tr>
+          <th>姓名</th>
+          <th>年龄</th>
+          <th>性别</th>
+          <th>操作</th>
+        </tr>
+        <tr
+          v-for="(item,index) in items"
+          @mouseover="show(index)"
+          @mouseout="leave(index)"
+          :class="{'bg':item.isAction,'gbg':index%2==0?true:false}"
+        >
+          <td>{{item.name}}</td>
+          <td>{{item.age}}</td>
+          <td>{{item.sex==0?"女":"男"}}</td>
+          <td>
+            <button @click="deleteItem(index)">删除</button>
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <script>
+      new Vue({
+        el: '#app',
+        data: {
+          items: [
+            { name: '张三', age: 18, sex: 0, isAction: false },
+            { name: '李四', age: 21, sex: 1, isAction: false },
+          ],
+          item: { name: '', age: '', sex: '', isAction: false },
+        },
+        methods: {
+          clearItem: function () {
+            this.item = { name: '', age: '', sex: '', isAction: false }
+          },
+          addItem: function () {
+            this.items.push(this.item)
+            this.item = { name: '', age: '', sex: '', isAction: false }
+          },
+          deleteItem: function (index) {
+            this.items.splice(index, 1)
+          },
+          show: function (index) {
+            this.items[index].isAction = true
+          },
+          leave: function (index) {
+            this.items[index].isAction = false
+          },
+        },
+      })
+    </script>
+  </body>
+</html>

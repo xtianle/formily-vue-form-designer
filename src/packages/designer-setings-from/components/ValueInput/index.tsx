@@ -1,0 +1,161 @@
+import { createPolyInput } from '../PolyInput'
+import {
+  ElSelect as Select,
+  ElOption as Option,
+  ElPopover as Popover,
+  ElButton as Button,
+} from 'element-plus'
+import { InputNumber, Input } from '@formily/element-plus'
+import { defineComponent } from 'vue'
+import { TextWidget } from '@designer-main-body'
+import { MonacoInput } from '../MonacoInput'
+
+const STARTTAG_REX =
+  /<([-A-Za-z0-9_]+)((?:\s+[a-zA-Z_:][-a-zA-Z0-9_:.]*(?:\s*=\s*(?:(?:"[^"]*")|(?:'[^']*')|[^>\s]+))?)*)\s*(\/?)>/
+
+const EXPRESSION_REX = /^\{\{([\s\S]*)\}\}$/
+
+const isNumber = (value: any) => typeof value === 'number'
+
+const isBoolean = (value: any) => typeof value === 'boolean'
+
+const isExpression = (value: any) => {
+  return typeof value === 'string' && EXPRESSION_REX.test(value)
+}
+
+const isRichText = (value: any) => {
+  return typeof value === 'string' && STARTTAG_REX.test(value)
+}
+
+const isNormalText = (value: any) => {
+  return typeof value === 'string' && !isExpression(value) && !isRichText(value)
+}
+
+const takeNumber = (value: any) => {
+  const num = String(value).replace(/[^\d\.]+/, '')
+  if (num === '') return
+  return Number(num)
+}
+
+const ExpressionCom = defineComponent({
+  name: 'ExpressionCom',
+  props: {
+    value: {
+      type: String,
+      default: '',
+    },
+  },
+  emits: ['change'],
+  setup(props, { emit, attrs }) {
+    return () => {
+      const renderEditor = () => {
+        return (
+          <div
+            style={{
+              width: '400px',
+              height: '200px',
+            }}
+          >
+            <MonacoInput
+              {...attrs}
+              value={props.value}
+              onChange={(value) => emit('change', value)}
+              language="javascript.expression"
+            />
+          </div>
+        )
+      }
+      const renderButton = () => {
+        return (
+          <Button>
+            <TextWidget token="SettingComponents.ValueInput.expression" />
+          </Button>
+        )
+      }
+      return (
+        <Popover
+          width={'auto'}
+          v-slots={{
+            reference: renderButton,
+          }}
+          trigger="click"
+        >
+          {renderEditor()}
+        </Popover>
+      )
+    }
+  },
+})
+
+const BooleanCom = defineComponent({
+  name: 'BooleanCom',
+  props: {
+    value: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  emits: ['change'],
+  setup(props, { emit }) {
+    return () => {
+      return (
+        <Select
+          modelValue={props.value}
+          {...{
+            'onUpdate:modelValue': (value) => {
+              emit('change', value)
+            },
+          }}
+        >
+          <Option label="True" value={true}></Option>
+          <Option label="False" value={false}></Option>
+        </Select>
+      )
+    }
+  },
+})
+
+export const ValueInput = createPolyInput([
+  {
+    type: 'TEXT',
+    icon: 'Text',
+    component: Input,
+    checker: isNormalText,
+  },
+  {
+    type: 'EXPRESSION',
+    icon: 'Expression',
+    component: ExpressionCom,
+    checker: isExpression,
+    toInputValue: (value) => {
+      if (!value || value === '{{}}') return
+      const matched = String(value).match(EXPRESSION_REX)
+      return matched?.[1] || value || ''
+    },
+    toChangeValue: (value) => {
+      if (!value || value === '{{}}') return
+      const matched = String(value).match(EXPRESSION_REX)
+      return `{{${matched?.[1] || value || ''}}}`
+    },
+  },
+  {
+    type: 'BOOLEAN',
+    icon: 'Boolean',
+    component: BooleanCom,
+    checker: isBoolean,
+    toInputValue: (value) => {
+      return !!value
+    },
+    toChangeValue: (value) => {
+      return !!value
+    },
+  },
+  {
+    type: 'NUMBER',
+    icon: 'Number',
+    component: InputNumber,
+    checker: isNumber,
+    toInputValue: takeNumber,
+    toChangeValue: takeNumber,
+  },
+])

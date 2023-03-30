@@ -1,0 +1,24 @@
+{
+  "extends": "@vue/tsconfig/tsconfig.web.json",
+  "include": ["env.d.ts", "src/**/*", "src/**/*.vue"],
+  "compilerOptions": {
+    "importsNotUsedAsValues": "preserve",
+    "preserveValueImports": false,
+    "strict": false,
+    "baseUrl": ".",
+    "paths": {
+      "@designable/shared": ["./src/packages/designable/shared"],
+      "@designable/core": ["./src/packages/designable/core"],
+      "@designable/transformer": ["./src/packages/designable/transformer"],
+      "@designer-main-body": ["./src/packages/designer-main-body"],
+      "@designer-renderer": ["./src/packages/designer-renderer"],
+      "@designer-setings-from": ["./src/packages/designer-setings-from"],
+      "@/*": ["./src/*"]
+    }
+  },
+  "references": [
+    {
+      "path": "./tsconfig.config.json"
+    }
+  ]
+}
